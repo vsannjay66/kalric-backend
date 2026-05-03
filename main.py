@@ -1338,6 +1338,7 @@ app.add_middleware(
         "http://localhost:5173",
         "http://localhost:3000",
         "http://192.168.0.112:5173",
+        "https://gym-agentt-ai.vercel.app",
         "https://kalric-frontend.vercel.app",  # ← add after Vercel deploy
     ],
     allow_credentials=True,
