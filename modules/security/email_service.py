@@ -19,47 +19,6 @@ def generate_otp() -> str:
     return str(random.randint(100000, 999999))
 
 
-async def send_verification_email(email: str, name: str, token: str):
-    frontend_url = os.getenv("FRONTEND_URL")
-    verify_link  = f"{frontend_url}/verify-email?token={token}"
-
-    html = f"""
-    <html>
-    <body style="font-family: Arial; max-width: 600px; margin: auto; padding: 20px;">
-        <div style="background: linear-gradient(135deg,#ff6b35,#f7931e);
-                    padding: 30px; border-radius: 12px; text-align: center;">
-            <h1 style="color: white; margin: 0;">💪 Gym AI Agent</h1>
-        </div>
-        <div style="padding: 30px; background: #f9f9f9; border-radius: 12px; margin-top: 20px;">
-            <h2 style="color: #333;">Welcome, {name}!</h2>
-            <p style="color: #666;">Click below to verify your email:</p>
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="{verify_link}"
-                   style="background: #ff6b35; color: white; padding: 14px 32px;
-                          text-decoration: none; border-radius: 8px; font-size: 16px;
-                          font-weight: bold; display: inline-block;">
-                    ✅ Verify My Email
-                </a>
-            </div>
-            <p style="color: #999; font-size: 12px;">
-                Link expires in 24 hours.
-                If you did not create this account, ignore this email.
-            </p>
-        </div>
-    </body>
-    </html>
-    """
-
-    message = Mail(
-        from_email = MAIL_FROM,
-        to_emails  = email,
-        subject    = "Verify Your Gym AI Agent Account 💪",
-        html_content = html
-    )
-    sg = SendGridAPIClient(SENDGRID_API_KEY)
-    sg.send(message)
-
-
 async def send_otp_email(email: str, name: str, otp: str):
     html = f"""
     <html>
@@ -85,11 +44,45 @@ async def send_otp_email(email: str, name: str, otp: str):
     </body>
     </html>
     """
-
     message = Mail(
         from_email   = MAIL_FROM,
         to_emails    = email,
         subject      = "Your KALRIC Login Code 🔐",
+        html_content = html
+    )
+    sg = SendGridAPIClient(SENDGRID_API_KEY)
+    sg.send(message)
+
+
+async def send_verification_email(email: str, name: str, token: str):
+    frontend_url = os.getenv("FRONTEND_URL")
+    verify_link  = f"{frontend_url}/verify-email?token={token}"
+    html = f"""
+    <html>
+    <body style="font-family: Arial; max-width: 600px; margin: auto; padding: 20px;">
+        <div style="background: linear-gradient(135deg,#ff6b35,#f7931e);
+                    padding: 30px; border-radius: 12px; text-align: center;">
+            <h1 style="color: white; margin: 0;">💪 KALRIC</h1>
+        </div>
+        <div style="padding: 30px; background: #f9f9f9; border-radius: 12px; margin-top: 20px;">
+            <h2 style="color: #333;">Welcome, {name}!</h2>
+            <p style="color: #666;">Click below to verify your email:</p>
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{verify_link}"
+                   style="background: #ff6b35; color: white; padding: 14px 32px;
+                          text-decoration: none; border-radius: 8px; font-size: 16px;
+                          font-weight: bold; display: inline-block;">
+                    ✅ Verify My Email
+                </a>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    message = Mail(
+        from_email   = MAIL_FROM,
+        to_emails    = email,
+        subject      = "Verify Your KALRIC Account 💪",
         html_content = html
     )
     sg = SendGridAPIClient(SENDGRID_API_KEY)
@@ -105,33 +98,14 @@ async def send_new_device_alert(email: str, name: str, device_info: dict):
         </div>
         <div style="padding: 30px; background: #f9f9f9; border-radius: 12px; margin-top: 20px;">
             <h2 style="color: #333;">Hi {name},</h2>
-            <p style="color: #666;">A new login was detected:</p>
-            <table style="width:100%; border-collapse: collapse;">
-                <tr style="background: white;">
-                    <td style="padding:10px; border:1px solid #ddd; font-weight:bold;">Device</td>
-                    <td style="padding:10px; border:1px solid #ddd;">{device_info.get('device_name','Unknown')}</td>
-                </tr>
-                <tr>
-                    <td style="padding:10px; border:1px solid #ddd; font-weight:bold;">Browser</td>
-                    <td style="padding:10px; border:1px solid #ddd;">{device_info.get('browser','Unknown')}</td>
-                </tr>
-                <tr style="background: white;">
-                    <td style="padding:10px; border:1px solid #ddd; font-weight:bold;">OS</td>
-                    <td style="padding:10px; border:1px solid #ddd;">{device_info.get('os','Unknown')}</td>
-                </tr>
-                <tr>
-                    <td style="padding:10px; border:1px solid #ddd; font-weight:bold;">IP</td>
-                    <td style="padding:10px; border:1px solid #ddd;">{device_info.get('ip_address','Unknown')}</td>
-                </tr>
-            </table>
-            <p style="color:#e74c3c; font-weight:bold; margin-top:20px;">
+            <p style="color: #666;">A new login was detected on your account.</p>
+            <p style="color:#e74c3c; font-weight:bold;">
                 If this was not you, change your password immediately!
             </p>
         </div>
     </body>
     </html>
     """
-
     message = Mail(
         from_email   = MAIL_FROM,
         to_emails    = email,
