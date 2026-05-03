@@ -1337,8 +1337,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:3000",
-        "http://192.168.0.111:5173"
-        "http://192.168.0.112:5173",  # ← Manoj's Mac
+        "http://192.168.0.112:5173",
+        "https://kalric-frontend.vercel.app",  # ← add after Vercel deploy
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
